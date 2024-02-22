@@ -204,3 +204,26 @@ offset_top = 152.0
 offset_right = 224.0
 offset_bottom = 176.0
 text = "Back to Menu"
+
+[node name="ServerCantCreate" type="TabBar" parent="Menu"]
+visible = false
+layout_mode = 2
+
+[node name="CreationFailed" type="Label" parent="Menu/ServerCantCreate"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 104.0
+offset_right = 272.0
+offset_bottom = 152.0
+text = "Failed to create server."
+label_settings = SubResource("LabelSettings_r1skr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackToMenu" type="Button" parent="Menu/ServerCantCreate"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 152.0
+offset_right = 224.0
+offset_bottom = 176.0
+text = "Back to Menu"

@@ -4,7 +4,6 @@ func _ready() -> void:
 	# Connect server signals to local functions
 	ServerManager.playerConnected.connect(_playerConnected)
 	ServerManager.playerDisconnected.connect(_playerDisconnected)
-	ServerManager.serverDisconnected.connect(_serverDisconnected)
 	
 	# Server tab signals
 	%ServerCreate.pressed.connect(_serverCreate)
@@ -23,8 +22,14 @@ func _ready() -> void:
 func _serverCreate() -> void:
 	# Set the local players name
 	ServerManager.playerInfo.name = %ServerPlayerName.text
-	# Create a new server
-	ServerManager.serverCreate()
+	
+	# Attempt to create a new server
+	var _error := ServerManager.serverCreate()
+	if _error: return
+	
+	# Connect server disconnect signal to our host disconnection function
+	ServerManager.serverDisconnected.connect(_serverHostDisconnected)
+	
 	# Switch to the lobby menu
 	%Menu.set_current_tab(1)
 	%LobbyStart.set_disabled(false)
@@ -33,13 +38,30 @@ func _serverCreate() -> void:
 func _serverJoin() -> void:
 	# Set the local players name
 	ServerManager.playerInfo.name = %ServerPlayerName.text
-	# Join an existing server
-	ServerManager.serverJoin()
+	
+	# Attempt to join an existing server
+	var _error := ServerManager.serverJoin()
+	if _error: return
+	
+	# Wait till we've connected to continue
+	await multiplayer.connected_to_server
+	
+	# Connect server disconnect signal to our peer disconnection function
+	ServerManager.serverDisconnected.connect(_serverPeerDisconnected)
+	
 	# Switch to the lobby menu
 	%Menu.set_current_tab(1)
 
-## Called when the server host has disconnected
-func _serverDisconnected() -> void:
+## Called on the server when they've disconnected
+func _serverHostDisconnected() -> void:
+	# Disconnect from the server disconnect signal
+	ServerManager.serverDisconnected.disconnect(_serverHostDisconnected)
+	%Menu.set_current_tab(0)
+
+## Called on peers when the host has disconnected
+func _serverPeerDisconnected() -> void:
+	# Disconnect from the server disconnect signal
+	ServerManager.serverDisconnected.disconnect(_serverPeerDisconnected)
 	%Menu.set_current_tab(2)
 
 ## Adds a players name to the lobby player list
@@ -54,7 +76,14 @@ func _playerDisconnected(id:int) -> void:
 #region Lobby Functions
 ## Leaves the current lobby
 func _lobbyLeave() -> void:
+	# if we're the server, close the multiplayer peer
+	if multiplayer.is_server():
+		ServerManager.serverClose()
+		return
+	
+	# If we're a client, remove the multiplayer peer
 	ServerManager.serverLeave()
+	
 	%Menu.set_current_tab(0)
 
 ## Updates the player list names in the server

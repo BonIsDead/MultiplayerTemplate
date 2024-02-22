@@ -34,15 +34,23 @@ func _ready() -> void:
 
 #region Server/Client Creation
 ## Creates a server
-func serverCreate() -> void:
+func serverCreate() -> Error:
 	# Create a multiplayer server
 	var _peer := ENetMultiplayerPeer.new()
 	var _error := _peer.create_server(PORT, CONNECTIONS_MAX)
 	
 	# Check if server creation was successful
 	if _error:
-		printerr("Failed to create server. ", _error)
-		return
+		match(_error):
+			# If server creation has failed
+			ERR_CANT_CREATE:
+				printerr("Failed to create server: ", _error)
+				return _error
+			
+			# If the error was something unexpected
+			_:
+				printerr("Something went wrong: ", _error)
+				return _error
 	
 	# Set the peer to our new multiplayer peer
 	multiplayer.multiplayer_peer = _peer
@@ -50,9 +58,11 @@ func serverCreate() -> void:
 	# Add local player information
 	players[1] = playerInfo
 	playerConnected.emit(1, playerInfo)
+	
+	return OK
 
 ## Joins an existing server
-func serverJoin(address:String = "") -> void:
+func serverJoin(address:String = "") -> Error:
 	# Set the address to the default if nothing was entered
 	if address.is_empty():
 		address = IP_DEFAULT
@@ -63,12 +73,32 @@ func serverJoin(address:String = "") -> void:
 	
 	# Check if client creation was successful
 	if _error:
-		printerr("Failed to join game. ", _error)
-		return
+		match(_error):
+			# If a connection already exists on the port we're using
+			ERR_ALREADY_EXISTS:
+				printerr("A connection already exists on that port: ", _error)
+				return _error
+			
+			# If we failed to connect to an existing server
+			ERR_CANT_CONNECT:
+				printerr("Failed to connect to game: ", _error)
+				return _error
+			
+			# If the error was something unexpected
+			_:
+				printerr("Something went wrong: ", _error)
+				return _error
 	
 	# Set the peer to our new multiplayer peer
 	multiplayer.multiplayer_peer = _peer
+	return OK
 
+## Closes the server
+func serverClose() -> void:
+	multiplayer.multiplayer_peer.close()
+	players.clear()
+
+## Leaves a server
 func serverLeave() -> void:
 	multiplayer.multiplayer_peer = null
 	players.clear()
