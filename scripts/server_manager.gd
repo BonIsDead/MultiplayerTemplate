@@ -10,7 +10,7 @@ signal serverDisconnected
 ## The port to connect to
 const PORT:int = 7000
 ## The fallback IP to connect to
-const IP_DEFAULT:String = "localhost"
+const IP_DEFAULT:String = "127.0.0.1"
 ## Maximum connections allowed in the server
 const CONNECTIONS_MAX:int = 4
 
@@ -21,20 +21,20 @@ var playersLoaded:int
 
 ## The local player information
 var playerInfo:Dictionary = {
-	"name" : "Player"
+	"name" : "???"
 }
 
 func _ready() -> void:
 	# Connect all multiplayer signals to our multiplayer functions
-	multiplayer.peer_connected.connect(_playerDisconnected)
+	multiplayer.peer_connected.connect(_playerConnected)
 	multiplayer.peer_disconnected.connect(_playerDisconnected)
 	multiplayer.connected_to_server.connect(_serverConnected)
 	multiplayer.connection_failed.connect(_serverConnectionFailed)
 	multiplayer.server_disconnected.connect(_serverDisconnected)
 
 #region Server/Client Creation
-## Creates a game server
-func gameCreate() -> void:
+## Creates a server
+func serverCreate() -> void:
 	# Create a multiplayer server
 	var _peer := ENetMultiplayerPeer.new()
 	var _error := _peer.create_server(PORT, CONNECTIONS_MAX)
@@ -51,8 +51,8 @@ func gameCreate() -> void:
 	players[1] = playerInfo
 	playerConnected.emit(1, playerInfo)
 
-## Joins a game server
-func gameJoin(address:String = "") -> void:
+## Joins an existing server
+func serverJoin(address:String = "") -> void:
 	# Set the address to the default if nothing was entered
 	if address.is_empty():
 		address = IP_DEFAULT
@@ -68,6 +68,10 @@ func gameJoin(address:String = "") -> void:
 	
 	# Set the peer to our new multiplayer peer
 	multiplayer.multiplayer_peer = _peer
+
+func serverLeave() -> void:
+	multiplayer.multiplayer_peer = null
+	players.clear()
 #endregion
 
 ## Called to change the scene
@@ -101,8 +105,8 @@ func _playerLoaded() -> void:
 
 #region Signal Functions
 ## Sends player information to peers on connection
-func _playerConnected(id:int, info:Dictionary) -> void:
-	_playerRegister.rpc_id(id, info)
+func _playerConnected(id:int) -> void:
+	_playerRegister.rpc_id(id, playerInfo)
 
 ## Removes the player from the server
 func _playerDisconnected(id:int) -> void:

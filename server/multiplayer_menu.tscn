@@ -1,0 +1,206 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfrjxbsnj1vsa"]
+
+[ext_resource type="Theme" uid="uid://bbihj8d61x6j4" path="res://default.theme" id="1_f5rx0"]
+[ext_resource type="Script" path="res://server/multiplayer_menu.gd" id="2_oo7a2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l5qvo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_r1skr"]
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
+
+[node name="MultiplayerMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_f5rx0")
+script = ExtResource("2_oo7a2")
+
+[node name="Menu" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_l5qvo")
+tabs_visible = false
+
+[node name="Server" type="TabBar" parent="Menu"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Menu/Server"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 16.0
+offset_right = 256.0
+offset_bottom = 80.0
+text = "Godot 4.2 Multiplayer
+Example Project"
+label_settings = SubResource("LabelSettings_r1skr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Credit" type="Label" parent="Menu/Server"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 208.0
+offset_right = 312.0
+offset_bottom = 232.0
+text = "created by bon·is·dead"
+label_settings = SubResource("LabelSettings_r1skr")
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Panel" type="Panel" parent="Menu/Server"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 88.0
+offset_right = 264.0
+offset_bottom = 192.0
+
+[node name="ServerAddress" type="LineEdit" parent="Menu/Server"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.433
+anchor_right = 0.8
+anchor_bottom = 0.533
+offset_top = -7.92001
+offset_bottom = -7.92001
+text = "127.0.0.1"
+placeholder_text = "127.0.0.1"
+alignment = 1
+max_length = 32
+context_menu_enabled = false
+virtual_keyboard_type = 2
+
+[node name="ServerPlayerName" type="LineEdit" parent="Menu/Server"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.433
+anchor_right = 0.8
+anchor_bottom = 0.533
+offset_top = 24.08
+offset_bottom = 24.08
+placeholder_text = "Display Name"
+alignment = 1
+max_length = 16
+context_menu_enabled = false
+virtual_keyboard_type = 2
+
+[node name="ServerCreate" type="Button" parent="Menu/Server"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 64.0
+offset_top = 160.0
+offset_right = 152.0
+offset_bottom = 184.0
+text = "Create"
+
+[node name="ServerJoin" type="Button" parent="Menu/Server"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 168.0
+offset_top = 160.0
+offset_right = 256.0
+offset_bottom = 184.0
+text = "Join"
+
+[node name="Lobby" type="TabBar" parent="Menu"]
+visible = false
+layout_mode = 2
+
+[node name="WaitingForPlayers" type="RichTextLabel" parent="Menu/Lobby"]
+clip_contents = false
+layout_mode = 0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 272.0
+offset_bottom = 40.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 4
+bbcode_enabled = true
+text = "[center][tornado freq=4 radius=3]...Waiting for Players..."
+
+[node name="LobbyHostName" type="Label" parent="Menu/Lobby"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 48.0
+offset_top = 40.0
+offset_right = 272.0
+offset_bottom = 61.0
+text = "???'s Server"
+label_settings = SubResource("LabelSettings_r1skr")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="Menu/Lobby"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 64.0
+offset_right = 272.0
+offset_bottom = 192.0
+
+[node name="PlayerListContainer" type="VBoxContainer" parent="Menu/Lobby"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 56.0
+offset_top = 72.0
+offset_right = 264.0
+offset_bottom = 184.0
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="LobbyStart" type="Button" parent="Menu/Lobby"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 64.0
+offset_top = 200.0
+offset_right = 152.0
+offset_bottom = 224.0
+disabled = true
+text = "Start"
+
+[node name="LobbyLeave" type="Button" parent="Menu/Lobby"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 168.0
+offset_top = 200.0
+offset_right = 256.0
+offset_bottom = 224.0
+text = "Leave"
+
+[node name="ServerEnded" type="TabBar" parent="Menu"]
+visible = false
+layout_mode = 2
+
+[node name="HostHasDisconnected" type="Label" parent="Menu/ServerEnded"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 104.0
+offset_right = 272.0
+offset_bottom = 152.0
+text = "The host has disconnected."
+label_settings = SubResource("LabelSettings_r1skr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ServerEndedBack" type="Button" parent="Menu/ServerEnded"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 96.0
+offset_top = 152.0
+offset_right = 224.0
+offset_bottom = 176.0
+text = "Back to Menu"
