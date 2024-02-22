@@ -24,6 +24,8 @@ var playerInfo:Dictionary = {
 	"name" : "???"
 }
 
+var serverSeed:int = randi()
+
 func _ready() -> void:
 	# Connect all multiplayer signals to our multiplayer functions
 	multiplayer.peer_connected.connect(_playerConnected)
@@ -102,6 +104,12 @@ func serverClose() -> void:
 func serverLeave() -> void:
 	multiplayer.multiplayer_peer = null
 	players.clear()
+
+## Sets the random seed for the server
+@rpc("call_remote", "authority", "reliable")
+func serverSetRandomSeed(value:int) -> void:
+	serverSeed = value
+	seed(value)
 #endregion
 
 ## Called to change the scene
@@ -137,6 +145,10 @@ func _playerLoaded() -> void:
 ## Sends player information to peers on connection
 func _playerConnected(id:int) -> void:
 	_playerRegister.rpc_id(id, playerInfo)
+	
+	# Syncs the random seed for each client
+	if multiplayer.is_server():
+		serverSetRandomSeed.rpc_id(id, serverSeed)
 
 ## Removes the player from the server
 func _playerDisconnected(id:int) -> void:

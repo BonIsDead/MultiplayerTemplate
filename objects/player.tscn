@@ -1,0 +1,139 @@
+[gd_scene load_steps=13 format=3 uid="uid://mu46urwu1kuv"]
+
+[ext_resource type="Script" path="res://objects/player.gd" id="1_0kv43"]
+[ext_resource type="Texture2D" uid="uid://kgfmy0q7wy0f" path="res://sprites/player.png" id="2_ekmkd"]
+[ext_resource type="FontFile" uid="uid://dp58627vvv0fq" path="res://SoTiny.ttf" id="3_ylvap"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_shg5g"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("AnimationPlayer:current_animation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="Animation" id="Animation_wou2e"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_jx7sp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_1ckjr"]
+resource_name = "walk"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9, 10, 11]
+}
+
+[sub_resource type="Animation" id="Animation_mw2xe"]
+resource_name = "jump"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [12]
+}
+
+[sub_resource type="Animation" id="Animation_sm38r"]
+resource_name = "fall"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [13]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cbf3v"]
+_data = {
+"RESET": SubResource("Animation_jx7sp"),
+"fall": SubResource("Animation_sm38r"),
+"idle": SubResource("Animation_wou2e"),
+"jump": SubResource("Animation_mw2xe"),
+"walk": SubResource("Animation_1ckjr")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6pcqn"]
+size = Vector2(8, 10)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wry4o"]
+font = ExtResource("3_ylvap")
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_0kv43")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_shg5g")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_cbf3v")
+}
+autoplay = "idle"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ekmkd")
+offset = Vector2(0, -8)
+hframes = 6
+vframes = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_6pcqn")
+
+[node name="UniqueId" type="Label" parent="."]
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = -16.0
+text = "UniqueID"
+label_settings = SubResource("LabelSettings_wry4o")
+horizontal_alignment = 1
+vertical_alignment = 1

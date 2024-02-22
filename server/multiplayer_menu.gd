@@ -8,13 +8,14 @@ func _ready() -> void:
 	# Server tab signals
 	%ServerCreate.pressed.connect(_serverCreate)
 	%ServerJoin.pressed.connect(_serverJoin)
+	%ServerEndedBack.pressed.connect(func():
+		%Menu.set_current_tab(0)
+	)
 	
 	# Lobby tab signals
 	%LobbyLeave.pressed.connect(_lobbyLeave)
-	
-	# Server ended tab signals
-	%ServerEndedBack.pressed.connect(func():
-		%Menu.set_current_tab(0)
+	%LobbyStart.pressed.connect(func():
+		ServerManager.loadScene.rpc("res://scenes/example_scene.tscn")
 	)
 
 #region Server Signal Functions
