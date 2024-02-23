@@ -5,4 +5,4 @@ This is _heavily_ based off [documentation](https://docs.godotengine.org/en/stab
 
 My/Godot's implimentation is for `"localhost"` connections, and is not designed for a dedicated server. It could be modified, as explained in more detail [here](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_dedicated_servers.html#doc-exporting-for-dedicated-servers).
 
-It is currently _just_ an example lobby where players can join and disconnect with their own display names. There is no example of gameplay yet!
+![MultiplayerTemplateExample](https://github.com/BonIsDead/MultiplayerTemplate/assets/76749496/a1f52a7d-364a-4596-a9c3-68d9599eaf0f)
