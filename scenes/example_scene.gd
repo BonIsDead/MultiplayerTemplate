@@ -4,11 +4,15 @@ extends Node2D
 @onready var playerScene:PackedScene = preload("res://objects/player.tscn")
 
 func _ready() -> void:
+	ServerManager.playerLoaded.rpc_id(1)
+	
 	# Connect the server managers signal
 	ServerManager.playerDisconnected.connect(_playerDisconnected)
 	ServerManager.serverDisconnected.connect(_serverDisconnected)
 	
 	# Let the server spawn players
+	print(multiplayer.get_unique_id() )
+	
 	if not multiplayer.is_server():
 		return
 	

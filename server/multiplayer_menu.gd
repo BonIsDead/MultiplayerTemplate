@@ -13,10 +13,8 @@ func _ready() -> void:
 	)
 	
 	# Lobby tab signals
+	%LobbyStart.pressed.connect(_lobbyStart)
 	%LobbyLeave.pressed.connect(_lobbyLeave)
-	%LobbyStart.pressed.connect(func():
-		ServerManager.loadScene.rpc("res://scenes/example_scene.tscn")
-	)
 
 #region Server Signal Functions
 ## Creates a server
@@ -75,16 +73,13 @@ func _playerDisconnected(id:int) -> void:
 #endregion
 
 #region Lobby Functions
+func _lobbyStart() -> void:
+	ServerManager.loadScene.rpc("res://scenes/example_scene.tscn")
+
 ## Leaves the current lobby
 func _lobbyLeave() -> void:
-	# if we're the server, close the multiplayer peer
-	if multiplayer.is_server():
-		ServerManager.serverClose()
-		return
-	
-	# If we're a client, remove the multiplayer peer
-	ServerManager.serverLeave()
-	
+	# Close the multiplayer peer
+	ServerManager.serverClose()
 	%Menu.set_current_tab(0)
 
 ## Updates the player list names in the server

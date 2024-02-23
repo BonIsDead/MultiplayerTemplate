@@ -97,12 +97,11 @@ func serverJoin(address:String = "") -> Error:
 
 ## Closes the server
 func serverClose() -> void:
+	# Close the multiplayer peer
 	multiplayer.multiplayer_peer.close()
-	players.clear()
-
-## Leaves a server
-func serverLeave() -> void:
-	multiplayer.multiplayer_peer = null
+	# Set the multiplayer API back to default (so players can create/join a server without having to reopen the game)
+	get_tree().set_multiplayer(MultiplayerAPI.create_default_interface() )
+	# Reset the players dictionary
 	players.clear()
 
 ## Sets the random seed for the server
@@ -126,7 +125,7 @@ func _playerRegister(info:Dictionary) -> void:
 	playerConnected.emit(_id, info)
 
 @rpc("any_peer", "call_local", "reliable")
-func _playerLoaded() -> void:
+func playerLoaded() -> void:
 	# Check if we're the server
 	if not multiplayer.is_server():
 		return
@@ -138,7 +137,8 @@ func _playerLoaded() -> void:
 	if not playersLoaded == players.size():
 		return
 	
-	# TODO - Start the game
+	print(playersLoaded)
+	playersLoaded = 0
 #endregion
 
 #region Signal Functions
