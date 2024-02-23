@@ -29,17 +29,34 @@ func _ready() -> void:
 		set_physics_process(false)
 
 func _process(delta:float) -> void:
-	if not is_multiplayer_authority():
-		return
-	
 	# Get player input
 	moveInput = Input.get_axis("move_left", "move_right")
 	jumpPressed = Input.is_action_just_pressed("jump")
+	
+	# Handle animations
+	# NOTE: This could be done better, but it didn't need to be for this example
+	if is_on_floor():
+		if abs(velocity.x) <= 0:
+			# Play idle animation
+			animPlayer.play("idle")
+		else:
+			# Play walking animation
+			animPlayer.play("walk")
+			
+			# Only flip sprite if the player is inputting movement
+			if moveInput:
+				if (velocity.x > 1.0):
+					$Sprite2D.set_flip_h(false)
+				elif (velocity.x < -1.0):
+					$Sprite2D.set_flip_h(true)
+	else:
+		# Jumping and falling animations
+		if velocity.y < 0:
+			animPlayer.play("jump")
+		else:
+			animPlayer.play("fall")
 
 func _physics_process(delta:float) -> void:
-	if not is_multiplayer_authority():
-		return
-	
 	# Apply gravity
 	velocity.y += GRAVITY * gravityStrength * delta
 	
@@ -48,10 +65,12 @@ func _physics_process(delta:float) -> void:
 		velocity.y = -JUMP_FORCE
 		jumpPressed = false
 	
-	# Apply friction only if on the floor
+	# Movement
 	if is_on_floor():
+		# Smoothly move towards maximum speed
 		velocity.x = move_toward(velocity.x, moveInput * SPEED_MAX, ACCELERATION * delta)
 	else:
+		# Only update velocity if an input is given
 		if moveInput:
 			velocity.x = move_toward(velocity.x, moveInput * SPEED_MAX, ACCELERATION * delta)
 	

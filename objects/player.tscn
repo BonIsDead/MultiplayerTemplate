@@ -8,12 +8,16 @@
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("AnimationPlayer:current_animation")
+properties/1/path = NodePath("Sprite2D:flip_h")
 properties/1/spawn = true
 properties/1/replication_mode = 2
+properties/2/path = NodePath("AnimationPlayer:current_animation")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [sub_resource type="Animation" id="Animation_wou2e"]
 resource_name = "idle"
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -29,6 +33,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_jx7sp"]
 length = 0.001
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -40,6 +45,18 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_1ckjr"]
@@ -62,6 +79,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id="Animation_mw2xe"]
 resource_name = "jump"
 length = 0.1
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -78,6 +96,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id="Animation_sm38r"]
 resource_name = "fall"
 length = 0.1
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
